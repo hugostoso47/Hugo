@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feira de Ciências: A Evolução do Trabalho</title>
+    <style>
+        /* CSS: Deixa o site bonito e organizado */
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f0f2f5;
+            margin: 0;
+            padding: 20px;
+            text-align: center;
+            color: #333;
+        }
+
+        h1 { color: #1a1a1a; margin-bottom: 5px; }
+        p.sub { color: #666; margin-bottom: 30px; }
+
+        /* Botões das Épocas */
+        .timeline-nav {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+        }
+
+        .time-btn {
+            padding: 12px 30px;
+            font-size: 16px;
+            font-weight: bold;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: 0.3s;
+            background-color: #ddd;
+            color: #555;
+        }
+
+        /* Cores especiais quando a época está ativa */
+        .time-btn.active[data-time="passado"] { background-color: #8b5a2b; color: white; }
+        .time-btn.active[data-time="presente"] { background-color: #007bff; color: white; }
+        .time-btn.active[data-time="futuro"] { background-color: #8a2be2; color: white; }
+
+        /* Container das Profissões (escondidas por padrão, JS mostra a certa) */
+        .professions-container {
+            display: none;
+            justify-content: center;
+            gap: 20px;
+            flex-wrap: wrap;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .professions-container.active { display: flex; }
+
+        /* Cards das Profissões */
+        .prof-card {
+            background: white;
+            padding: 25px;
+            border-radius: 12px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            width: 200px;
+            cursor: pointer;
+            transition: transform 0.2s;
+        }
+
+        .prof-card:hover { transform: translateY(-5px); }
+        .prof-card h3 { margin: 0; color: #222; }
+
+        /* Janela Flutuante (Modal) que mostra a informação */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+        }
+
+        .modal-content {
+            background: white;
+            padding: 30px;
+            border-radius: 15px;
+            max-width: 450px;
+            width: 90%;
+            text-align: left;
+            position: relative;
+            box-shadow: 0 5px 25px rgba(0,0,0,0.2);
+        }
+
+        .close-btn {
+            position: absolute;
+            top: 15px; right: 20px;
+            font-size: 24px; cursor: pointer; color: #aaa;
+        }
+        .close-btn:hover { color: #333; }
+        .modal h2 { margin-top: 0; color: #1a1a1a; }
+        .modal p { line-height: 1.6; color: #444; }
+    </style>
+</head>
+<body>
+
+    <h1>A Evolução do Trabalho com a Tecnologia</h1>
+    <p class="sub">Clique em uma época da história e escolha uma profissão para ver seu impacto.</p>
+
+    <!-- Menu de Navegação do Tempo -->
+    <div class="timeline-nav">
+        <button class="time-btn active" data-time="passado" onclick="mudarTempo('passado')">📜 Passado</button>
+        <button class="time-btn" data-time="presente" onclick="mudarTempo('presente')">💻 Presente</button>
+        <button class="time-btn" data-time="futuro" onclick="mudarTempo('futuro')">🚀 Futuro</button>
+    </div>
+
+    <!-- SEÇÃO: PASSADO -->
+    <div id="passado" class="professions-container active">
+        <div class="prof-card" onclick="mostrarInfo('Médico (Passado)', 'No passado, os médicos dependiam muito de fichas de papel e exames puramente físicos. Diagnósticos demoravam dias para sair e não existia histórico médico digital acessível.')">
+            <h3>🩺 Médico</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Professor (Passado)', 'As aulas eram focadas na lousa de giz e em livros físicos pesados. A pesquisa de conteúdo dependia de grandes enciclopédias impressas, como a Barsa.')">
+            <h3>👨‍🏫 Professor</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Agricultor (Passado)', 'O trabalho no campo era extremamente braçal, dependendo da força humana e de animais de tração (como cavalos e bois) para arar a terra. A colheita era lenta e vulnerável ao clima.')">
+            <h3>🌾 Agricultor</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Artista / Designer (Passado)', 'Desenhos, cartazes e artes eram feitos totalmente à mão, usando tintas, pincéis, réguas e mesas de luz. Erros significavam recomeçar o trabalho do zero.')">
+            <h3>🎨 Artista / Designer</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Secretária (Passado)', 'O dia a dia envolvia digitar relatórios em máquinas de escrever barulhentas. A comunicação era por cartas ou telefone fixo, e os documentos eram guardados em arquivos de metal gigantes.')">
+            <h3>💼 Secretária</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Comerciante (Passado)', 'As vendas aconteciam apenas em lojas físicas e o estoque era controlado em cadernos. O pagamento era em dinheiro vivo ou cheques, e o alcance era estritamente local.')">
+            <h3>🛒 Comerciante</h3>
+        </div>
+    </div>
+
+    <!-- SEÇÃO: PRESENTE -->
+    <div id="presente" class="professions-container">
+        <div class="prof-card" onclick="mostrarInfo('Médico (Presente)', 'Hoje, a tecnologia trouxe o prontuário eletrônico e a telemedicina. O médico atende pessoas a distância e recebe exames direto no computador ou celular em minutos.')">
+            <h3>🩺 Médico</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Professor (Presente)', 'Os professores usam projetores, plataformas de ensino online e IA para criar aulas dinâmicas. Os alunos acessam toda a informação do mundo com um clique.')">
+            <h3>👨‍🏫 Professor</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Agricultor (Presente)', 'O campo usa tratores modernos com GPS e colheitadeiras gigantes automatizadas. Drones sobrevoam as plantações para identificar pragas e mapear a saúde do solo.')">
+            <h3>🌾 Agricultor</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Artista / Designer (Presente)', 'O trabalho migrou para computadores e tablets gráficos (Mesa Digitalizadora). Softwares como Photoshop e Illustrator permitem criar artes perfeitas e corrigir erros num instante.')">
+            <h3>🎨 Artista / Designer</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Secretária (Presente)', 'Computadores e softwares em nuvem centralizam tudo. Agendas digitais, e-mails e planilhas integradas agilizam o trabalho, que muitas vezes pode ser feito de Home Office.')">
+            <h3>💼 Secretária</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Comerciante (Presente)', 'Lojas físicas agora competem com o E-commerce (sites de venda e Instagram). Os pagamentos são instantâneos via Pix ou cartão, e os sistemas gerenciam as vendas automaticamente.')">
+            <h3>🛒 Comerciante</h3>
+        </div>
+    </div>
+
+    <!-- SEÇÃO: FUTURO -->
+    <div id="futuro" class="professions-container">
+        <div class="prof-card" onclick="mostrarInfo('Médico (Futuro)', 'No futuro, médicos vão monitorar pacientes através de bio-chips internos e usarão IA preditiva para evitar doenças antes delas surgirem. Robôs farão cirurgias complexas sozinhos.')">
+            <h3>🩺 Médico</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Professor (Futuro)', 'A educação será imersiva com Realidade Virtual. Professores guiarão alunos em viagens no tempo digitais, e tutorias de IA criarão cronogramas personalizados para cada mente.')">
+            <h3>👨‍🏫 Professor</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Agricultor (Futuro)', 'Surgem as Fazendas Verticais totalmente automatizadas dentro de cidades. Robôs cuidam do plantio e colheita sem necessidade de agrotóxicos ou terra, tudo controlado por Inteligência Artificial.')">
+            <h3>🌾 Agricultor</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Artista / Designer (Futuro)', 'Os profissionais atuarão como co-criadores ao lado de Inteligências Artificiais gerativas avançadas e criarão artes interativas focadas no Metaverso e experiências em 3D imersivas.')">
+            <h3>🎨 Artista / Designer</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Secretária (Futuro)', 'A profissão evolui para Assistente de IA de Alta Performance. Humanos gerenciarão frotas de robôs de atendimento e algoritmos complexos que resolvem tarefas rotineiras sozinhos.')">
+            <h3>💼 Secretária</h3>
+        </div>
+        <div class="prof-card" onclick="mostrarInfo('Comerciante (Futuro)', 'Compras serão feitas em lojas virtuais holográficas com provadores em Realidade Aumentada. IAs vão prever o que o cliente quer comprar e enviarão o produto por drones antes mesmo do pedido.')">
+            <h3>🛒 Comerciante</h3>
+        </div>
+    </div>
+
+    <!-- JANELA FLUTUANTE (MODAL) -->
+    <div id="meuModal" class="modal">
+        <div class="modal-content">
+            <span class="close-btn" onclick="fecharModal()">&times;</span>
+            <h2 id="modalTitulo">Título</h2>
+            <p id="modalTexto">Texto descritivo aqui.</p>
+        </div>
+    </div>
+
+    <!-- JAVASCRIPT: Lógica de clique e interações -->
+    <script>
+        // Função para trocar de época (Passado/Presente/Futuro)
+        function mudarTempo(tempoSelecionado) {
+            // Esconde todas as profissões
+            document.querySelectorAll('.professions-container').forEach(div => div.classList.remove('active'));
+            // Desativa todos os botões
+            document.querySelectorAll('.time-btn').forEach(btn => btn.classList.remove('active'));
+            
+            // Mostra apenas a época clicada
+            document.getElementById(tempoSelecionado).classList.add('active');
+            // Ativa o botão clicado
+            document.querySelector(`[data-time="${tempoSelecionado}"]`).classList.add('active');
+        }
+
+        // Função para abrir o balão com o texto explicativo
+        function mostrarInfo(titulo, texto) {
+            document.getElementById('modalTitulo').innerText = titulo;
+            document.getElementById('modalTexto').innerText = texto;
+            document.getElementById('meuModal').style.display = 'flex';
+        }
+
+        // Função para fechar o balão
+        function fecharModal() {
+            document.getElementById('meuModal').style.display = 'none';
+        }
+
+        // Fecha se o usuário clicar fora do balão branco
+        window.onclick = function(event) {
+            let modal = document.getElementById('meuModal');
+            if (event.target == modal) { fecharModal(); }
+        }
+    </script>
+</body>
+</html>
